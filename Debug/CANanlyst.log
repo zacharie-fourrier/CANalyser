@@ -1,0 +1,4 @@
+﻿  frame.cpp
+C:\Users\Zacharie\Documents\C++\CANalyst\CANanlyst\CANanlyst\frame.cpp(74,28): warning C4018: '<' : incompatibilité signed/unsigned
+C:\Users\Zacharie\Documents\C++\CANalyst\CANanlyst\CANanlyst\frame.cpp(104,28): warning C4018: '<' : incompatibilité signed/unsigned
+  CANanlyst.vcxproj -> C:\Users\Zacharie\Documents\C++\CANalyst\CANanlyst\Debug\CANanlyst.exe
