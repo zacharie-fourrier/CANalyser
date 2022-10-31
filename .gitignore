@@ -31,8 +31,8 @@
 *.out
 *.app
 
-#visual studio files
+# visual studio files
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
-/Debug
+./Debug
