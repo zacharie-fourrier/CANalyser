@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+#visual studio files
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+/Debug
