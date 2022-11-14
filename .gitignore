@@ -36,3 +36,6 @@
 *.vcxproj.filters
 *.vcxproj.user
 ./Debug
+
+# VSCode files
+.vscode
