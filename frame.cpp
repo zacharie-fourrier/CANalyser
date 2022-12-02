@@ -193,6 +193,14 @@ namespace can
 		return type;
 	}
 
+	bool Frame::getIDE() const {
+		return _IDE;
+	}
+
+	bool Frame::getRTR() const {
+		return _RTR;
+	}
+
 	unsigned Frame::boolArrayToInt(vector<bool> b) const {
 		unsigned res = 0;
 		for (unsigned i = 0; i < b.size(); i++) {

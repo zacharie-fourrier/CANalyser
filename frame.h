@@ -22,6 +22,8 @@ public:
 	std::string getFormat() const;
 	unsigned getCRC() const;
 	std::string getType() const;
+	bool getIDE() const;
+	bool getRTR() const;
 	unsigned boolArrayToInt(std::vector<bool> b) const;
 };
 }
