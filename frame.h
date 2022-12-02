@@ -16,12 +16,12 @@ private:
 public:
 	Frame(std::string str);
 	std::string toString() const;
-	std::string getIdentifier() const;
-	int getDLC() const;
-	std::string getData() const;
+	unsigned getIdentifier() const;
+	unsigned getDLC() const;
+	unsigned getData() const;
 	std::string getFormat() const;
-	std::string getCRC() const;
+	unsigned getCRC() const;
 	std::string getType() const;
-	std::string binToHex(bool a, bool b, bool c, bool d) const;
+	unsigned boolArrayToInt(std::vector<bool> b) const;
 };
 }

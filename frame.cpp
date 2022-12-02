@@ -70,7 +70,7 @@ namespace can
 				_Identifier.push_back(_Frame.at(k + 14));
 			}
 			if (!_RTR) {
-				int crc = this->getDLC();
+				unsigned crc = this->getDLC();
 				for (unsigned k = 0; k < crc * 8; k++) {
 					_Data.push_back(_Frame.at(k + 39));
 				}
@@ -100,16 +100,16 @@ namespace can
 				_DLC.push_back(_Frame.at(k + 15));
 			}
 			if (!_RTR) {
-				int crc = this->getDLC();
-				for (unsigned k = 0; k < crc * 8; k++) {
+				unsigned dlc = this->getDLC();
+				for (unsigned k = 0; k < dlc * 8; k++) {
 					_Data.push_back(_Frame.at(k + 19));
 				}
 				for (unsigned k = 0; k < 15; k++) {
-					_CRC.push_back(_Frame.at(k + 19 + (crc * 8)));
+					_CRC.push_back(_Frame.at(k + 19 + (dlc * 8)));
 				}
-				_CRCD = _Frame.at(35 + (crc * 8));
-				_ACKS = _Frame.at(36 + (crc * 8));
-				_ACKD = _Frame.at(37 + (crc * 8));
+				_CRCD = _Frame.at(35 + (dlc * 8));
+				_ACKS = _Frame.at(36 + (dlc * 8));
+				_ACKD = _Frame.at(37 + (dlc * 8));
 			}
 			else {
 				for (unsigned k = 0; k < 15; k++) {
@@ -136,7 +136,7 @@ namespace can
 		for (bool b : _Identifier) {
 			ss << b;
 		}
-		ss << " > " << this->getIdentifier() << endl << "DLC = ";
+		ss << " > 0x" << hex << this->getIdentifier() << endl << "DLC = ";
 		for (bool b : _DLC) {
 			ss << b;
 		}
@@ -144,9 +144,9 @@ namespace can
 		if (!_RTR) {
 			ss << "Data = ";
 			for (bool b : _Data) {
-				ss << b;
+				ss << dec << b;
 			}
-			ss << " > " << this->getData() << endl;
+			ss << " > 0x" << hex << this->getData() << endl;
 		}
 		else {
 			ss << "Remote frame, no data" << endl;
@@ -155,54 +155,22 @@ namespace can
 		for (bool b : _CRC) {
 			ss << b;
 		}
-		ss << " > " << this->getCRC() << endl;
+		ss << " > 0x" << hex << this->getCRC() << endl;
 		return ss.str();
 	}
 
-	string Frame::getIdentifier() const {
-		string identifier = "0x";
-		identifier += this->binToHex(0, _Identifier.at(0), _Identifier.at(1), _Identifier.at(2));
-		identifier += this->binToHex(_Identifier.at(3), _Identifier.at(4), _Identifier.at(5), _Identifier.at(6));
-		identifier += this->binToHex(_Identifier.at(7), _Identifier.at(8), _Identifier.at(9), _Identifier.at(10));
-		if (_IDE) {
-			identifier += this->binToHex(0, 0, _Identifier.at(11), _Identifier.at(12));
-			identifier += this->binToHex(_Identifier.at(13), _Identifier.at(14), _Identifier.at(15), _Identifier.at(16));
-			identifier += this->binToHex(_Identifier.at(17), _Identifier.at(18), _Identifier.at(19), _Identifier.at(20));
-			identifier += this->binToHex(_Identifier.at(21), _Identifier.at(22), _Identifier.at(23), _Identifier.at(24));
-			identifier += this->binToHex(_Identifier.at(25), _Identifier.at(26), _Identifier.at(27), _Identifier.at(28));
-		}
+	unsigned Frame::getIdentifier() const {
+		unsigned identifier = boolArrayToInt(_Identifier);
 		return identifier;
 	}
 
-	int Frame::getDLC() const {
-		string data;
-		data += this->binToHex(_DLC.at(0), _DLC.at(1), _DLC.at(2), _DLC.at(3));
-		int bytes;
-		if (data == "0") { bytes = 0; }
-		else if (data == "1") { bytes = 1; }
-		else if (data == "2") { bytes = 2; }
-		else if (data == "3") { bytes = 3; }
-		else if (data == "4") { bytes = 4; }
-		else if (data == "5") { bytes = 5; }
-		else if (data == "6") { bytes = 6; }
-		else if (data == "7") { bytes = 7; }
-		else if (data == "8") { bytes = 8; }
-		else if (data == "9") { bytes = 9; }
-		else if (data == "A") { bytes = 10; }
-		else if (data == "B") { bytes = 11; }
-		else if (data == "C") { bytes = 12; }
-		else if (data == "D") { bytes = 13; }
-		else if (data == "E") { bytes = 14; }
-		else if (data == "F") { bytes = 15; }
-		return bytes;
+	unsigned Frame::getDLC() const {
+		unsigned data = boolArrayToInt(_DLC);
+		return data;
 	}
 
-	string Frame::getData() const {
-		string data = "0x";
-		int size = this->getDLC();
-		for (int k = 0; k < size * 8; k += 4) {
-			data += this->binToHex(_Data.at(k), _Data.at(k + 1), _Data.at(k + 2), _Data.at(k + 3));
-		}
+	unsigned Frame::getData() const {
+		unsigned data = boolArrayToInt(_Data);
 		return data;
 	}
 
@@ -213,12 +181,8 @@ namespace can
 		return format;
 	}
 
-	string Frame::getCRC() const {
-		string crc = "0x";
-		crc += this->binToHex(0, _CRC.at(0), _CRC.at(1), _CRC.at(2));
-		crc += this->binToHex(_CRC.at(3), _CRC.at(4), _CRC.at(5), _CRC.at(6));
-		crc += this->binToHex(_CRC.at(7), _CRC.at(8), _CRC.at(9), _CRC.at(10));
-		crc += this->binToHex(_CRC.at(11), _CRC.at(12), _CRC.at(13), _CRC.at(14));
+	unsigned Frame::getCRC() const {
+		unsigned crc = boolArrayToInt(_CRC);
 		return crc;
 	}
 
@@ -229,8 +193,11 @@ namespace can
 		return type;
 	}
 
-	string Frame::binToHex(bool a, bool b, bool c, bool d) const {
-		string test[16] = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
-		return test[(a << 3) + (b << 2) + (c << 1) + d];
+	unsigned Frame::boolArrayToInt(vector<bool> b) const {
+		unsigned res = 0;
+		for (unsigned i = 0; i < b.size(); i++) {
+			res += b.at(i) << (b.size() - i - 1);
+		}
+		return res;
 	}
 }
